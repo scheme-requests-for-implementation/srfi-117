@@ -33,12 +33,14 @@ subscribe to the list.  You can access previous messages via
      href="http://srfi.schemers.org/cgi-bin/viewcvs.cgi/*checkout*/srfi/srfi-117/srfi-117.html?rev=1.2">2014/12/04</a></li>
      <li>Revised: <a
      href="http://srfi.schemers.org/cgi-bin/viewcvs.cgi/*checkout*/srfi/srfi-117/srfi-117.html?rev=1.3">2014/12/06</a></li>
+     <li>Revised: <a
+     href="http://srfi.schemers.org/cgi-bin/viewcvs.cgi/*checkout*/srfi/srfi-117/srfi-117.html?rev=1.4">2015/01/11</a></li>
 </ul>
 
 <H1>Abstract</H1>
 
 <p>
-List queues are mutable ordered collections that can contain any Scheme object.  Each list queue is based on an ordinary Scheme list containing the elements of the list queue by maintaining pointers to the first and last pairs of the list.  It's cheap to add or remove elements from the front of the list or to add elements to the back, but not to rdmove elements from the back.  List queues are disjoint from other types of Scheme objects.
+List queues are mutable ordered collections that can contain any Scheme object.  Each list queue is based on an ordinary Scheme list containing the elements of the list queue by maintaining pointers to the first and last pairs of the list.  It's cheap to add or remove elements from the front of the list or to add elements to the back, but not to remove elements from the back.  List queues are disjoint from other types of Scheme objects.
 </p>
 
 <H1>Issues</H1>
@@ -86,18 +88,18 @@ Returns a newly allocated list queue containing the elements of <em>list-queue</
 </p>
 <p>Creates a newly allocated empty list queue, and performs the following algorithm:</p>
 
-<p>If the result of applying the predicate <em>stop?</em> to <em>seed</em> is <tt>#f</tt>, return the list queue.  Otherwise, apply the procedure <em>mapper</em> to <em>seed</em>, returning a value which is added to the back of the list queue.  Then get a new seed by applying the procedure <em>successor</em> to <em>seed</em>, and repeat this algorithm.
+<p>If the result of applying the predicate <em>stop?</em> to <em>seed</em> is true, return the list queue.  Otherwise, apply the procedure <em>mapper</em> to <em>seed</em>, returning a value which is added to the back of the list queue.  Then get a new seed by applying the procedure <em>successor</em> to <em>seed</em>, and repeat this algorithm.
 </p>
 <p>
 <tt>(list-queue-unfold-right </tt><em>stop? mapper successor seed</em><tt>)</tt>
 </p>
 <p>Creates a newly allocated empty list queue, and performs the following algorithm:</p>
 
-<p>If the result of applying the predicate <em>stop?</em> to <em>seed</em> is <tt>#f</tt>, return the list queue.  Otherwise, apply the procedure <em>mapper</em> to <em>seed</em>, returning a value which is added to the front of the list queue.  Then get a new seed by applying the procedure <em>successor</em> to <em>seed</em>, and repeat this algorithm.</p>
+<p>If the result of applying the predicate <em>stop?</em> to <em>seed</em> is true, return the list queue.  Otherwise, apply the procedure <em>mapper</em> to <em>seed</em>, returning a value which is added to the front of the list queue.  Then get a new seed by applying the procedure <em>successor</em> to <em>seed</em>, and repeat this algorithm.</p>
 
 <h2 id="Predicates">Predicates</h2>
 <p>
-<tt>(queue? </tt><em>obj</em><tt>)</tt>
+<tt>(list-queue? </tt><em>obj</em><tt>)</tt>
 </p>
 <p>
 Returns <tt>#t</tt> if <em>obj</em> is a list queue, and <tt>#f</tt> otherwise.  This operation is O(1).
@@ -113,13 +115,13 @@ Returns <tt>#t</tt> if <em>list-queue</em> has no elements, and <tt>#f</tt> othe
 <tt>(list-queue-front </tt><em>list-queue</em><tt>)</tt>
 </p>
 <p>
-Returns the first element of <em>list-queue</em>.  If the list queue is empty, an error is signaled.  This operation is O(1).
+Returns the first element of <em>list-queue</em>.  If the list queue is empty, an error that satisfies <code>empty-queue-error?</code> is signaled.  This operation is O(1).
 </p>
 <p>
 <tt>(list-queue-back </tt><em>list-queue</em><tt>)</tt>
 </p>
 <p>
-Returns the last element of <em>list-queue</em>.  If the list queue is empty, an error is signaled.  This operation is O(1).
+Returns the last element of <em>list-queue</em>.  If the list queue is empty, an error that satisfies <code>empty-queue-error?</code> is signaled.  This operation is O(1).
 </p>
 <p>
 <tt>(list-queue-list </tt><em>list-queue</em><tt>)</tt>
@@ -150,13 +152,13 @@ Adds <em>element</em> to the end of <em>list-queue</em>.  Returns an unspecified
 <tt>(list-queue-remove-front! </tt><em>list-queue</em><tt>)</tt>
 </p>
 <p>
-Removes the first element of <em>list-queue</em> and returns it. If the list queue is empty, an error is signaled.  This operation is O(1).
+Removes the first element of <em>list-queue</em> and returns it. If the list queue is empty, an error that satisfies <code>empty-queue-error?</code> is signaled.  This operation is O(1).
 </p>
 <p>
 <tt>(list-queue-remove-back! </tt><em>list-queue</em><tt>)</tt>
 </p>
 <p>
-Removes the last element of <em>list-queue</em> and returns it.  If the list queue is empty, an error is signaled.  This operation is O(n) where n is the list queue length, because the list does not have backward links.
+Removes the last element of <em>list-queue</em> and returns it.  If the list queue is empty, an error that satisfies <code>empty-queue-error?</code> is signaled.  This operation is O(n) where n is the list queue length, because the list does not have backward links.
 </p>
 <p>
 <tt>(list-queue-remove-all! </tt><em>list-queue</em><tt>)</tt>
@@ -205,6 +207,14 @@ Applies <em>proc</em> to each element of <em>list-queue</em> in front-to-back or
 Applies <em>proc</em> to each element of <em>list-queue</em> in front-to-back order, discarding the returned values.  Returns an unspecified value.  This operation is O(n) where n is the list queue length.
 </p>
 
+<h2 id="Errors">Errors</h2>
+
+<p>
+<tt>(empty-list-queue-error? </tt><em>obj</em><tt>)</tt>
+</p>
+<p>
+Returns <code>#t</code> if <em>obj</em> is an object raised by any of the above procedures that cannot accept empty list queues, and <code>#f</code> otherwise.  An object that satisfies this predicate may or may not satisfy <code>error-object?</code>.</p>
+
 <H1>Implementation</H1>
 
 <p>The sample implementation places the identifiers defined above into the <code>list-queues</code> library.</p>
@@ -242,7 +252,7 @@ DEALINGS IN THE SOFTWARE.</p>
     <address>Editor: <a href="mailto:srfi-editors at srfi dot schemers dot org">Michael Sperber</a></address>
 <!-- Created: Tue Sep 29 19:20:08 EDT 1998 -->
 <!-- hhmts start -->
-Last modified: Sat Dec  6 13:47:33 MET 2014
+Last modified: Sun Jan 11 13:47:35 MET 2015
 <!-- hhmts end -->
   </body>
 </html>
