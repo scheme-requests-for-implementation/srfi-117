@@ -166,6 +166,19 @@
       list-queues)
      result))
 
+(define list-queue-append!
+  (case-lambda
+    (() (list-queue))
+    ((queue) queue)
+    (queues
+      (for-each (lambda (queue) (list-queue-join! (car queues) queue))
+                (cdr queues))
+      (car queues))))
+
+; Forcibly join two queues, destroying the second
+(define (list-queue-join! queue1 queue2)
+  (set-cdr! (get-last queue1) (get-first queue2)))
+
 (define (list-queue-reverse list-queue)
   (make-list-queue (reverse (get-first list-queue))))
 
