@@ -17,7 +17,7 @@ John Cowan &lt;cowan@ccil.org&gt;
 This SRFI is currently in ``draft'' status.
 To see an explanation of
 each status that a SRFI can hold, see <a
-href="http://srfi.speechcode.com/srfi-process.html">here</a>.
+href="http://srfi.schemers.org/srfi-process.html">here</a>.
 
 To provide input on this SRFI, please
 <a href="mailto:srfi minus 117 at srfi dot schemers dot org">mail to
@@ -57,7 +57,7 @@ List queues are mutable ordered collections that can contain any Scheme object. 
 
 <p>Historically, objects of this form were called "tconc structures" (where "tconc" is short for "tail concatenate"), and Lispers have tended to roll their own using pairs.  This version uses a record to hold the first-pair and last-pair pointers rather than a pair, but uses pairs and the empty list internally.</p>
 
-<p>Because the representation of list queues as lists is exposed by the implementation, it's not necessary to provide a comprehensive API for list queues.  Instead, <a class="ext-link" href="http://srfi.speechcode.com/srfi-1/srfi-1.html">SRFI 1</a> and other list APIs can serve the same purpose, using the conversion procedures to convert between list queues and lists fairly cheaply.  Consequently, the API provided here over and above the bare necessities of queueing and dequeueing elements is roughly analogous to the R7RS-small API for lists.  It also subsumes the <a class="ext-link" href="http://wiki.call-cc.org/man/4/Unit%20data-structures#queues">Chicken</a> and <a class="ext-link" href="http://people.csail.mit.edu/jaffer/slib/Queues.html#Queues">​SLIB</a> APIs.</p>
+<p>Because the representation of list queues as lists is exposed by the implementation, it's not necessary to provide a comprehensive API for list queues.  Instead, <a class="ext-link" href="http://srfi.schemers.org/srfi-1/srfi-1.html">SRFI 1</a> and other list APIs can serve the same purpose, using the conversion procedures to convert between list queues and lists fairly cheaply.  Consequently, the API provided here over and above the bare necessities of queueing and dequeueing elements is roughly analogous to the R7RS-small API for lists.  It also subsumes the <a class="ext-link" href="http://wiki.call-cc.org/man/4/Unit%20data-structures#queues">Chicken</a> and <a class="ext-link" href="http://people.csail.mit.edu/jaffer/slib/Queues.html#Queues">​SLIB</a> APIs.</p>
 
 <H1>Specification</H1>
 
@@ -227,7 +227,7 @@ Applies <var>proc</var> to each element of <var>list-queue</var> in front-to-bac
 
 <p>The sample implementation places the identifiers defined above into the <code>list-queues</code> library.</p>
 
-<p>The <a href="http://srfi.speechcode.com/srfi-117/list-queues.tar.gz">sample implementation</a> contains the following files:</p>
+<p>The <a href="http://srfi.schemers.org/srfi-117/list-queues.tar.gz">sample implementation</a> contains the following files:</p>
 
 <ul><li><code>list-queues-impl.scm</code> – implementation of queues</li>
 <li><code>list-queues.sld</code> – an R7RS library named <code>(queues)</code></li>
