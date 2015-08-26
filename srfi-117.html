@@ -66,9 +66,9 @@ List queues are mutable ordered collections that can contain any Scheme object. 
 <tt>(make-list-queue </tt><var>list</var> [ <var>last</var> ]<tt>)</tt>
 </p>
 <p>
-Returns a newly allocated list queue containing the elements of <var>list</var> in order.  The result shares storage with <var>list</var>.  If the <var>last</var> argument is not provided, this operation is O(n) where n is the list queue length.</p>
+Returns a newly allocated list queue containing the elements of <var>list</var> in order.  The result shares storage with <var>list</var>.  If the <var>last</var> argument is not provided, this operation is O(n) where n is the length of <var>list</var>.</p>
 
-<p>However, if <var>last</var> is provided, <code>make-list-queue</code> returns a newly allocated list queue containing the elements of the list whose first pair is <var>first</var> and whose last pair is <var>last</var>.  It is an error if the pairs do not belong to the same list.  Alternatively, both <var>first</var> and <var>last</var> can be the empty list.  In this case, the operation is O(1).</p>
+<p>However, if <var>last</var> is provided, <code>make-list-queue</code> returns a newly allocated list queue containing the elements of the list whose first pair is <var>first</var> and whose last pair is <var>last</var>.  It is an error if the pairs do not belong to the same list.  Alternatively, both <var>first</var> and <var>last</var> can be the empty list.  In either case, the operation is O(1).</p>
 <p>
 Note: To apply a non-destructive list procedure to a list queue and return a new list queue, use <tt>(make-list-queue (</tt><var>proc</var><tt> (list-queue-list </tt><var>list-queue</var><tt>)))</tt>.
 </p>
@@ -77,27 +77,32 @@ Note: To apply a non-destructive list procedure to a list queue and return a new
 <tt>(list-queue </tt><var>element</var> ...<tt>)</tt>
 </p>
 <p>
-Returns a newly allocated list queue containing the <var>elements</var>.  This operation is O(n) where n is the list queue length.
+Returns a newly allocated list queue containing the <var>elements</var>.  This operation is O(n) where n is the number of elements.
 </p>
 <p>
 <tt>(list-queue-copy </tt><var>list-queue</var><tt>)</tt>
 </p>
 <p>
-Returns a newly allocated list queue containing the elements of <var>list-queue</var>.  This operation is O(n).
+Returns a newly allocated list queue containing the elements of <var>list-queue</var>.  This operation is O(n) where n is the length of <var>list-queue</var>
 </p>
 <p>
-<tt>(list-queue-unfold </tt><var>stop? mapper successor seed</var><tt>)</tt>
+<tt>(list-queue-unfold </tt><var>stop? mapper successor seed</var> [ <var>queue</var> ]<tt>)</tt>
 </p>
-<p>Creates a newly allocated empty list queue, and performs the following algorithm:</p>
+<p>Performs the following algorithm:</p>
 
-<p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return the list queue.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the back of the list queue.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.
+<p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return <var>queue</var>.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the back of <var>queue</var>.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.
 </p>
+
+<p>If <var>queue</var> is omitted, a newly allocated list queue is used.</p>
+
 <p>
 <tt>(list-queue-unfold-right </tt><var>stop? mapper successor seed</var><tt>)</tt>
 </p>
-<p>Creates a newly allocated empty list queue, and performs the following algorithm:</p>
+<p>Performs the following algorithm:</p>
 
 <p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return the list queue.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the front of the list queue.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.</p>
+
+<p>If <var>queue</var> is omitted, a newly allocated list queue is used.</p>
 
 <h2 id="Predicates">Predicates</h2>
 <p>
@@ -160,7 +165,7 @@ Removes the first element of <var>list-queue</var> and returns it. If the list q
 <tt>(list-queue-remove-back! </tt><var>list-queue</var><tt>)</tt>
 </p>
 <p>
-Removes the last element of <var>list-queue</var> and returns it.  If the list queue is empty, it is an error.  This operation is O(n) where n is the list queue length, because the list does not have backward links.
+Removes the last element of <var>list-queue</var> and returns it.  If the list queue is empty, it is an error.  This operation is O(n) where n is the length of <var>list-queue</var>, because queues do not not have backward links.
 </p>
 <p>
 <tt>(list-queue-remove-all! </tt><var>list-queue</var><tt>)</tt>
@@ -169,16 +174,11 @@ Removes the last element of <var>list-queue</var> and returns it.  If the list q
 Removes all the elements of <var>list-queue</var> and returns them in order as a list.  Returns an unspecified value.  This operation is O(1).
 </p>
 <p>
-<tt>(list-queue-clear! </tt><var>list-queue</var><tt>)</tt>
-</p>
-<p>
-Removes all elements of <var>list-queue</var>.  Returns an unspecified value.  This operation is O(1).
-</p>
 <p>
 <tt>(list-queue-set-list! </tt><var>list-queue list</var> [ <var>last</var> ]<tt>)</tt>
 </p>
 <p>
-Replaces the list associated with <var>list-queue</var> with <var>list</var>, effectively discarding all the elements of <var>list-queue</var> in favor of those in <var>list</var>.  Returns an unspecified value.  This operation is O(n) where n is the list length.  If <var>last</var> is provided, it is treated in the same way as in <code>make-list-queue</code>, and the operation is O(1).
+Replaces the list associated with <var>list-queue</var> with <var>list</var>, effectively discarding all the elements of <var>list-queue</var> in favor of those in <var>list</var>.  Returns an unspecified value.  This operation is O(n) where n is the length of <var>list</var>.  If <var>last</var> is provided, it is treated in the same way as in <code>make-list-queue</code>, and the operation is O(1).
 </p>
 <p>
 Note: To apply a destructive list procedure to a list queue, use <tt>(list-queue-set-list! (</tt><var>proc</var><tt> (list-queue-list </tt><var>list-queue</var><tt>)))</tt>.
@@ -187,13 +187,13 @@ Note: To apply a destructive list procedure to a list queue, use <tt>(list-queue
 <tt>(list-queue-append </tt><var>list-queue</var> ...<tt>)</tt>
 </p>
 <p>
-Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in the order in which they appear.  The result does not share storage with any of the arguments.  This operation is O(n) in the total number of elements in all queues.  
+Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in front-to-back order.  The result does not share storage with any of the arguments.  This operation is O(n) in the total number of elements in all queues.  
 </p>
 <p>
 <tt>(list-queue-append! </tt><var>list-queue</var> ...<tt>)</tt>
 </p>
 <p>
-Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in the order in which they appear.  The <var>list-queues</var> are destroyed in the process.  This operation is O(n) in the total number of queues, not elements.  
+Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in front-to-back order.  It is an error to assume anything about the contents of the <var>list-queues</var> after the procedure returns.  This operation is O(n) in the total number of queues, not elements.  
 It is not part of the R7RS-small list API, but is included here for efficiency
 when pure functional append is not required.
 </p>
@@ -201,36 +201,36 @@ when pure functional append is not required.
 <tt>(list-queue-concatenate </tt><var>list-of-list-queues</var><tt>)</tt>
 </p>
 <p>
-Returns a list queue which contains all the elements in front-to-back order from all the list queues which are members of <var>list-of-list-queues</var> in the order in which they appear.  The result does not share storage with any of the arguments.  This operation is O(n) in the total number of elements in all queues.  It is not part of the R7RS-small list API, but is included here to make appending a large number of queues possible in Schemes that limit the number of arguments to <tt>apply</tt>.
+Returns a list queue which contains all the elements in front-to-back order from all the list queues which are members of <var>list-of-list-queues</var> in front-to-back order.  The result does not share storage with any of the arguments.  This operation is O(n) in the total number of elements in all queues.  It is not part of the R7RS-small list API, but is included here to make appending a large number of queues possible in Schemes that limit the number of arguments to <tt>apply</tt>.
 </p>
 <h2 id="Mapping">Mapping</h2>
 <p>
 <tt>(list-queue-map </tt><var>proc list-queue</var><tt>)</tt>
 </p>
 <p>
-Applies <var>proc</var> to each element of <var>list-queue</var> in unspecified order and returns a newly allocated list queue containing the results.  This operation is O(n) where n is the list queue length.
+Applies <var>proc</var> to each element of <var>list-queue</var> in unspecified order and returns a newly allocated list queue containing the results.  This operation is O(n) where n is the length of <var>list-queue</var>.
 </p>
 <p>
 <tt>(list-queue-map! </tt><var>proc list-queue</var><tt>)</tt>
 </p>
 <p>
-Applies <var>proc</var> to each element of <var>list-queue</var> in front-to-back order and modifies <var>list-queue</var> to contain the results.  This operation is O(n).  It is not part of the R7RS-small list API, but is included here to make transformation of a list queue by mutation more efficient.
+Applies <var>proc</var> to each element of <var>list-queue</var> in front-to-back order and modifies <var>list-queue</var> to contain the results.  This operation is O(n) in the length of <var>list-queue</var>.  It is not part of the R7RS-small list API, but is included here to make transformation of a list queue by mutation more efficient.
 </p>
 <p>
 <tt>(list-queue-for-each </tt><var>proc list-queue</var><tt>)</tt>
 </p>
 <p>
-Applies <var>proc</var> to each element of <var>list-queue</var> in front-to-back order, discarding the returned values.  Returns an unspecified value.  This operation is O(n) where n is the list queue length.
+Applies <var>proc</var> to each element of <var>list-queue</var> in front-to-back order, discarding the returned values.  Returns an unspecified value.  This operation is O(n) where n is the length of <var>list-queue</var>.
 </p>
 
 <H1>Implementation</H1>
 
-<p>The sample implementation places the identifiers defined above into the <code>list-queues</code> library.</p>
+<p>The sample implementation places the identifiers defined above into the <code>list-queue</code> library.</p>
 
 <p>The <a href="http://srfi.schemers.org/srfi-117/list-queues.tar.gz">sample implementation</a> contains the following files:</p>
 
 <ul><li><code>list-queues-impl.scm</code> – implementation of queues</li>
-<li><code>list-queues.sld</code> – an R7RS library named <code>(queues)</code></li>
+<li><code>list-queues.sld</code> – an R7RS library named <code>(list-queue)</code></li>
 <li><code>list-queues.scm</code> – a Chicken library</li>
 <li><code>list-queues-test.scm</code> – tests using the Chicken test egg</li>
 </ul>
