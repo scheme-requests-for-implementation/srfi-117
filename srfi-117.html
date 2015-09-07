@@ -91,7 +91,7 @@ Returns a newly allocated list queue containing the elements of <var>list-queue<
 </p>
 <p>Performs the following algorithm:</p>
 
-<p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return <var>queue</var>.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the back of <var>queue</var>.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.
+<p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return <var>queue</var>.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the front of <var>queue</var>.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.
 </p>
 
 <p>If <var>queue</var> is omitted, a newly allocated list queue is used.</p>
@@ -101,7 +101,7 @@ Returns a newly allocated list queue containing the elements of <var>list-queue<
 </p>
 <p>Performs the following algorithm:</p>
 
-<p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return the list queue.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the front of the list queue.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.</p>
+<p>If the result of applying the predicate <var>stop?</var> to <var>seed</var> is true, return the list queue.  Otherwise, apply the procedure <var>mapper</var> to <var>seed</var>, returning a value which is added to the back of the list queue.  Then get a new seed by applying the procedure <var>successor</var> to <var>seed</var>, and repeat this algorithm.</p>
 
 <p>If <var>queue</var> is omitted, a newly allocated list queue is used.</p>
 
