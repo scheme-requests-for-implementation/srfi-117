@@ -1,5 +1,7 @@
-(use test list-queues)
-;(import (chibi test) (list-queues))
+(cond-expand
+  (chicken (use test list-queues))
+  (chibi (import (chibi test) (list-queues)))
+)
 
 (test-group "list-queues"
 
@@ -7,6 +9,9 @@
   (test '(1 1 1) (list-queue-list (make-list-queue '(1 1 1))))
   (define x (list-queue 1 2 3))
   (test '(1 2 3) (list-queue-list x))
+  (define x1 (list 1 2 3))
+  (define x2 (make-list-queue x1 (cddr x1)))
+  (test 3 (list-queue-back x2))
   (define y (list-queue 4 5))
   (test-assert (list-queue? y))
   (define z (list-queue-append x y))
@@ -22,11 +27,9 @@
   (test-error (list-queue-remove-front! y))
   (test-error (list-queue-remove-back! y))
   (test '(1 2 3 4 5) (list-queue-list z))
-  (define z2 (list-queue-copy z))
-  (list-queue-clear! z)
-  (test-assert (list-queue-empty? z))
   (test '(1 2 3 4 5) (list-queue-remove-all! z2))
   (test-assert (list-queue-empty? z2))
+  (list-queue-remove-all! z)
   (list-queue-add-front! z 1)
   (list-queue-add-front! z 0)
   (list-queue-add-back! z 2)
@@ -40,7 +43,7 @@
   (test '(1 2 3) (list-queue-list b))
   (list-queue-add-front! b 0)
   (test '(1 2 3) (list-queue-list a))
-  (test 4 (list-queue-length b))
+  (test 4 (length (list-queue-list b)))
   (define c (list-queue-concatenate (list a b)))
   (test '(1 2 3 0 1 2 3) (list-queue-list c))
 ) ; end list-queues/whole
@@ -78,18 +81,20 @@
 ); end list-queues/conversion
 
 (test-group "list-queues/unfold"
-  (define ql (list-queue-unfold
-               (lambda (x) (> x 5))
-               (lambda (x) (* x 10))
-               (lambda (x) (+ x 1))
-               0))
-    (test '(0 10 20 30 40 50) (list-queue-list ql))
-  (define qr (list-queue-unfold-right
-               (lambda (x) (> x 5))
-               (lambda (x) (* x 10))
-               (lambda (x) (+ x 1))
-               0))
-    (test '(50 40 30 20 10 0) (list-queue-list qr))
+  (define (double x) (* x 2))
+  (define (done? x) (> x 3))
+  (define (add1 x) (+ x 1))
+  (define x (list-queue-unfold done? double add1 0))
+  (test '(0 2 4 6) (list-queue-list x))
+  (define y (list-queue-unfold-right done? double add1 0))
+  (test '(6 4 2 0) (list-queue-list y))
+  (define x0 (list-queue 8))
+  (define x1 (list-queue-unfold done? double add1 0 x0))
+  (test '(0 2 4 6 8) (list-queue-list x1))
+  (define y0 (list-queue 8))
+  (define y1 (list-queue-unfold-right done? double add1 0 y0))
+  (test '(8 6 4 2 0) (list-queue-list y1))
+
 ) ; end list-queues/unfold
 
 ) ; end list-queues

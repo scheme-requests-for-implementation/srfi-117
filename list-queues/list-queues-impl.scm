@@ -34,22 +34,6 @@
         (set-car! lis (f (car lis)))
         (lp (cdr lis))))))
 
-;;; Again, these definitions of unfold and unfold-right are stripped down;
-;;; there is no support for a tail generator.
-
-(define (unfold stop? mapper successor seed)
-  (let loop ((seed seed))
-    (if (stop? seed) '()
-        (cons (mapper seed) (loop (successor seed))))))
-
-(define (unfold-right stop? mapper successor seed)
-  (let loop ((seed seed) (ans '()))
-    (if (stop? seed)
-        ans
-        (loop (successor seed)
-            (cons (mapper seed) ans)))))
-
-
 ;;; The list-queue record
 ;;; The invariant is that either first is (the first pair of) a list
 ;;; and last is the last pair, or both of them are the empty list.
@@ -132,7 +116,8 @@
 
 (define (list-queue-remove-all! list-queue)
    (let ((result (get-first list-queue)))
-      (list-queue-clear! list-queue)
+      (set-first! list-queue '())
+      (set-last! list-queue '())
       result))
 
 ;; Return the next to last pair of lis, or nil if there is none
@@ -145,14 +130,8 @@
       ((null? (cddr lis)) lis)
       (else (lp (cdr lis))))))
 
-(define (list-queue-clear! list-queue)
-  (set-first! list-queue '())
-  (set-last! list-queue '()))
-
 ;;; The whole list-queue
 
-(define (list-queue-length list-queue)
-  (length (get-first list-queue)))
 
 ;; Because append does not copy its back argument, we cannot use it
 (define (list-queue-append . list-queues)
@@ -179,41 +158,34 @@
 (define (list-queue-join! queue1 queue2)
   (set-cdr! (get-last queue1) (get-first queue2)))
 
-(define (list-queue-reverse list-queue)
-  (make-list-queue (reverse (get-first list-queue))))
-
-(define list-queue-member?
-  (case-lambda
-    ((list-queue elem)
-     (list-queue-member? list-queue elem equal?))
-    ((list-queue elem =)
-     (let lp ((lis (get-first list-queue)))
-       (if (null? lis)
-         #f
-         (if (= (car lis) elem)
-           #t
-           (lp (cdr lis))))))))
-
-(define list-queue-assoc
-  (case-lambda
-    ((elem list-queue)
-     (list-queue-assoc elem list-queue equal?))
-    ((list-queue elem =)
-     (let lp ((lis (get-first list-queue)))
-       (if (null? lis)
-         #f
-         (if (= (caar lis) elem)
-           (car lis)
-           (lp (cdr lis))))))))
-
 (define (list-queue-map proc list-queue)
   (make-list-queue (map proc (get-first list-queue))))
 
-(define (list-queue-unfold stop? mapper successor seed)
-  (make-list-queue (unfold stop? mapper successor seed)))
+(define list-queue-unfold
+  (case-lambda
+    ((stop? mapper successor seed queue)
+     (list-queue-unfold* stop? mapper successor seed queue))
+    ((stop? mapper successor seed)
+     (list-queue-unfold* stop? mapper successor seed (list-queue)))))
 
-(define (list-queue-unfold-right stop? mapper successor seed)
-  (make-list-queue (unfold-right stop? mapper successor seed)))
+(define (list-queue-unfold* stop? mapper successor seed queue)
+  (let loop ((seed seed))
+    (if (not (stop? seed))
+      (list-queue-add-front! (loop (successor seed)) (mapper seed)))
+    queue))
+
+(define list-queue-unfold-right
+  (case-lambda
+    ((stop? mapper successor seed queue)
+     (list-queue-unfold-right* stop? mapper successor seed queue))
+    ((stop? mapper successor seed)
+     (list-queue-unfold-right* stop? mapper successor seed (list-queue)))))
+
+(define (list-queue-unfold-right* stop? mapper successor seed queue)
+  (let loop ((seed seed))
+    (if (not (stop? seed))
+      (list-queue-add-back! (loop (successor seed)) (mapper seed)))
+    queue))
 
 (define (list-queue-map! proc list-queue)
   (map! proc (get-first list-queue)))
