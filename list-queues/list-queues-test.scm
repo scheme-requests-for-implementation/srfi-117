@@ -1,5 +1,5 @@
 (cond-expand
-  (chicken (use test list-queues))
+  (chicken (use test srfi-117))
   (chibi (import (chibi test) (list-queues)))
 )
 
