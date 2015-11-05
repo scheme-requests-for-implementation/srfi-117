@@ -1,4 +1,4 @@
-(module list-queues ()
+(module srfi-117 ()
   (import scheme)
   (import (only chicken include define-record-type case-lambda error))
   (export make-list-queue list-queue list-queue-copy list-queue-unfold list-queue-unfold-right)
@@ -9,5 +9,5 @@
   (export list-queue-append list-queue-append! list-queue-concatenate)
   (export list-queue-append list-queue-append! list-queue-concatenate)
   (export list-queue-map list-queue-map! list-queue-for-each)
-  (include "list-queues-impl.scm")
+  (include "list-queues/list-queues-impl.scm")
 )

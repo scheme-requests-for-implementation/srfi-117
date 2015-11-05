@@ -1,4 +1,4 @@
-(define-library (list-queues)
+(define-library (srfi-117)
   (import (scheme base) (scheme case-lambda))
   (export make-list-queue list-queue list-queue-copy list-queue-unfold list-queue-unfold-right)
   (export list-queue? list-queue-empty?)
