@@ -16,7 +16,7 @@
   (test-assert (list-queue? y))
   (define z (list-queue-append x y))
   (test '(1 2 3 4 5) (list-queue-list z))
-  (define z2 (list-queue-append! x y))
+  (define z2 (list-queue-append! x (list-queue-copy y)))
   (test '(1 2 3 4 5) (list-queue-list z2))
   (test 1 (list-queue-front z))
   (test 5 (list-queue-back z))
