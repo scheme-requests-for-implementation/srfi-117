@@ -10,7 +10,7 @@
         "srfi-117.meta"
         "srfi-117.release-info"
         "LICENSE"
-        "README.md")
+        "README.org")
 
  (license "BSD")
  (category data)
