@@ -98,7 +98,7 @@ Returns a newly allocated list queue containing the elements of <var>list-queue<
 <p>If <var>queue</var> is omitted, a newly allocated list queue is used.</p>
 
 <p>
-<tt>(list-queue-unfold-right </tt><var>stop? mapper successor seed</var><tt>)</tt>
+<tt>(list-queue-unfold-right </tt><var>stop? mapper successor seed</var> [ <var>queue</var> ]<tt>)</tt>
 </p>
 <p>Performs the following algorithm:</p>
 
@@ -189,13 +189,13 @@ Note: To apply a destructive list procedure to a list queue, use <tt>(list-queue
 <tt>(list-queue-append </tt><var>list-queue</var> ...<tt>)</tt>
 </p>
 <p>
-Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in front-to-back order.  The result does not share storage with any of the arguments.  This operation is O(n) in the total number of elements in all queues.  
+Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in front-to-back order.  The result does not share storage with any of the arguments.  This operation is O(n) in the total number of elements in all queues.
 </p>
 <p>
 <tt>(list-queue-append! </tt><var>list-queue</var> ...<tt>)</tt>
 </p>
 <p>
-Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in front-to-back order.  It is an error to assume anything about the contents of the <var>list-queues</var> after the procedure returns.  This operation is O(n) in the total number of queues, not elements.  
+Returns a list queue which contains all the elements in front-to-back order from all the <var>list-queues</var> in front-to-back order.  It is an error to assume anything about the contents of the <var>list-queues</var> after the procedure returns.  This operation is O(n) in the total number of queues, not elements.
 It is not part of the R7RS-small list API, but is included here for efficiency
 when pure functional append is not required.
 </p>
@@ -238,7 +238,7 @@ Applies <var>proc</var> to each element of <var>list-queue</var> in front-to-bac
 </ul>
 
 <H1>Copyright</H1>
-Copyright © John Cowan, 2014. All Rights Reserved. 
+Copyright © John Cowan, 2014. All Rights Reserved.
 <p>
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
