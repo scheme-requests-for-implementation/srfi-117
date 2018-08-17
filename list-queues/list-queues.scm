@@ -7,7 +7,6 @@
   (export list-queue-add-front! list-queue-add-back! list-queue-remove-front! list-queue-remove-back!)
   (export list-queue-remove-all! list-queue-set-list!)
   (export list-queue-append list-queue-append! list-queue-concatenate)
-  (export list-queue-append list-queue-append! list-queue-concatenate)
   (export list-queue-map list-queue-map! list-queue-for-each)
   (include "list-queues/list-queues-impl.scm")
 )
