@@ -1,4 +1,7 @@
-;; -*- Hen -*-
+;;;; -*- Hen -*-
+;;;; SPDX-FileCopyrightText: 2014 John Cowan <cowan@ccil.org>
+;;;;
+;;;; SPDX-License-Identifier: MIT
 
 ((egg "srfi-117.egg")
  ; List of files that should be bundled alongside egg
@@ -9,7 +12,8 @@
         "srfi-117.setup"
         "srfi-117.meta"
         "srfi-117.release-info"
-        "LICENSE"
+        "LICENSES/MIT.txt"
+        "LICENSES/BSD-3-Clause.txt"
         "README.org")
 
  (license "BSD")

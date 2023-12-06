@@ -1,3 +1,7 @@
+;;;; SPDX-FileCopyrightText: 2017 Alex Shinn
+;;;;
+;;;; SPDX-License-Identifier: BSD-3-Clause
+
 (cond-expand
   (chicken (use test srfi-117))
   (chibi (import (chibi test) (list-queues)))

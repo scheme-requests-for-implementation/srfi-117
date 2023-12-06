@@ -1,3 +1,7 @@
+;;;; SPDX-FileCopyrightText: 2014 John Cowan <cowan@ccil.org>
+;;;;
+;;;; SPDX-License-Identifier: MIT
+
 (module srfi-117 ()
   (import scheme)
   (import (only chicken include define-record-type case-lambda error))
