@@ -1,3 +1,7 @@
+;;;; SPDX-FileCopyrightText: 2017 Alex Shinn
+;;;;
+;;;; SPDX-License-Identifier: BSD-3-Clause
+
 ;;;; Implementation of list-queue SRFI
 
 ;;; R7RS shims.  Comment these out on an R7RS system.
